@@ -10,7 +10,8 @@
 #
 #=============================================
 
-from numpy import sqrt
+from numpy import sqrt,arctan,pi
+from scipy.optimize import fsolve
 
 def Mj_NPR(NPR):
     """ Mj_NPR(NPR)
@@ -24,7 +25,6 @@ def Uj_Mj(Mj,T0=293):
     provides fully expanded jet velocity
     from Mj and Total temperature
     """
-    from numpy import sqrt
     g=1.4
     R=287.0
     return sqrt(g*R*T0*(1. + (g-1)/2.*Mj**2)**(-1))*Mj
@@ -75,18 +75,35 @@ def M_aac(Ac,A):
     """ M as function of A and Ac
         returns: M_aac(Ac,A)
     """
-    from scipy.optimize import fsolve
     g=1.4;
 
     def func(M):
          return aac_M(M) - A/Ac
 
     M0_sub = fsolve(func,0.01,xtol=1e-10,maxfev=500)
-    M0_sup = fsolve(func,1.02,xtol=1e-10,maxfev=500)
+    M0_sup = fsolve(func,1.05,xtol=1e-10,maxfev=500)
 
     return {'subsonic':M0_sub[0],'supersonic':M0_sup[0]}
 
-def nu_M(M):
+def nu(M):
     """ Prandtl-Meyer relation """
+    g=1.4
+    gp1 = g+1
+    gm1 = g-1
+    nu = (sqrt(gp1/gm1)*arctan(sqrt(gm1/gp1*(M**2-1)))
+          - arctan(sqrt(M**2-1)))
 
-    return 0
+    return nu*180/pi
+
+def nu_inv(nu_in):
+    """ Inverse Prandtl-Meyer function """
+    g=1.4
+    gp1 = g+1
+    gm1 = g-1
+
+    def rel(M):
+        return (nu_in -nu(M))
+
+    M0 = fsolve(rel,1.02,xtol=1e-10,maxfev=500)
+
+    return M0[0]
