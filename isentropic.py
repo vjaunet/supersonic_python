@@ -1,6 +1,13 @@
 #
 #     isentropic relations for python
 #
+#
+#  author  : vincent jaunet,
+#            vincent [dot] jaunet [at] ensma [dot] fr
+#  date    : 03/2020
+#  License : MIT
+#
+#
 #=============================================
 
 from numpy import sqrt

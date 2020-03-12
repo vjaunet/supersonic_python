@@ -1,6 +1,11 @@
 #
 #     shock relations for python
 #
+#  author  : vincent jaunet,
+#            vincent [dot] jaunet [at] ensma [dot] fr
+#  date    : 03/2020
+#  License : MIT
+#
 #=============================================
 
 import numpy as np
