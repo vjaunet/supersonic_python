@@ -56,13 +56,8 @@ def ppi_M(M):
 def M_ppi(ppi):
     """ Inverted isentropic pressure ratio """
     g=1.4;
-    return sqrt(2/(g-1)*ppi**(g/(g-1) - 1 ))
+    return sqrt(2/(g-1)*(ppi**(-(g-1)/g) - 1 ))
 
-
-def M_ppi(ppi):
-    """ Inverted isentropic pressure ratio from M """
-    g=1.4;
-    return sqrt(2/(g-1)*ppi**(g/(g-1) - 1 ))
 
 def aac_M(M):
     """ A/A* as a function of Mach
@@ -71,7 +66,7 @@ def aac_M(M):
     g=1.4;
     return 1.0/M*((1.0 + (g-1.0)/2.0*M**2)*2/(g+1))**((g+1)/2/(g-1))
 
-def M_aac(Ac,A):
+def M_aac(Ac,A,Msub_ini=0.01,Msup_ini=1.05):
     """ M as function of A and Ac
         returns: M_aac(Ac,A)
     """
@@ -80,8 +75,8 @@ def M_aac(Ac,A):
     def func(M):
          return aac_M(M) - A/Ac
 
-    M0_sub = fsolve(func,0.01,xtol=1e-10,maxfev=500)
-    M0_sup = fsolve(func,1.05,xtol=1e-10,maxfev=500)
+    M0_sub = fsolve(func,Msub_ini,xtol=1e-10,maxfev=500)
+    M0_sup = fsolve(func,Msup_ini,xtol=1e-10,maxfev=500)
 
     return {'subsonic':M0_sub[0],'supersonic':M0_sup[0]}
 
